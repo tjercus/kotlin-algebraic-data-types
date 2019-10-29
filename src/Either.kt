@@ -1,11 +1,13 @@
 
 // Either is Right biased, so it uses Right when not specified a Left or Right
-open class Either(open val value: Any) : Functor {
+open class Either(open val value: Any) : Monad {
   override fun map(fn: (Any?) -> Any): Functor = Right(fn(value))
 
   override fun inspect(): String = "Either(${value})"
 
   override fun unwrap(whenLeft: (Any?) -> Any, whenRight: (Any) -> Any): Any = whenRight(value)
+
+  override fun chain(fn: (Any?) -> Any): Any = fn(value)
 
   companion object {
     fun of(value: Any): Right = Right(value)
@@ -19,6 +21,8 @@ class Left(override val value: Any) : Either(value) {
   override fun unwrap(whenLeft: (Any?) -> Any, whenRight: (Any) -> Any): Any = whenLeft(value)
 
   override fun map(fn: (Any?) -> Any): Either = this
+
+  override fun chain(fn: (Any?) -> Any): Any = this
 
   companion object {
     fun of(value: Any): Left = Left(value)

@@ -41,4 +41,15 @@ internal class EitherTest {
         {value -> "mapped a Right: $value"})
     assertEquals("No map on a Left: blah", extractedLeft)
   }
+
+  @Test
+  fun chain() {
+    val uppercasedExtracted = Either.of("blah")
+      .chain { value -> (value as String).toUpperCase() }
+    assertEquals("BLAH", uppercasedExtracted);
+
+    val nullWrapped = Left.of("blah")
+      .chain { value -> (value as String).toUpperCase() }
+    assertTrue(nullWrapped.toString().contains("Left@"));
+  }
 }
